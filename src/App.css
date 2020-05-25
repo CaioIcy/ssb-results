@@ -37,10 +37,29 @@
   }
 }
 
+.main-card {
+  display: inline-block;
+  background-color: #EFEFEF;
+  border: 1px red;
+}
+
 .character-slot {
   border: 1px red;
   background-repeat: no-repeat;
   width: 150px;
   height: 150px;
   display: inline-block;
+  position: relative;
+}
+
+.slot-text-top {
+  position: absolute;
+  top: 0;
+  background: white;
+}
+
+.slot-text-bot {
+  position: absolute;
+  bottom: 0;
+  background: white;
 }
