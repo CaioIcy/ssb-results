@@ -1,5 +1,6 @@
 {
   "name": "ssb-results-gen",
+  "homepage": "https://caioicy.github.io/ssb-results",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
