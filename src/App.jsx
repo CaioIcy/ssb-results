@@ -2,10 +2,18 @@ import React from 'react';
 import './App.css';
 import htmlToImage from 'html-to-image';
 import downloadjs from 'downloadjs';
+import Select from '@material-ui/core/Select';
+import FormControl from '@material-ui/core/FormControl';
+import MenuItem from '@material-ui/core/MenuItem';
+import InputLabel from '@material-ui/core/InputLabel';
+import assetBank from './Assets.jsx';
 
 function importAll(r) {
   let images = {};
-  r.keys().map((item, index) => { images[item.replace('./', '')] = r(item); });
+  r.keys().map((item, index) => {
+    images[item.replace('./', '')] = r(item);
+    return;
+  });
   return images;
 }
 
@@ -22,42 +30,42 @@ class App extends React.Component {
       slots: [
         {
           character: "fox",
-          skin: "0",
+          skin: "Default",
           player: "caioicy",
         },
         {
           character: "falco",
-          skin: "0",
+          skin: "Default",
           player: "caioicy",
         },
         {
           character: "marth",
-          skin: "0",
+          skin: "Default",
           player: "caioicy",
         },
         {
           character: "sheik",
-          skin: "0",
+          skin: "Default",
           player: "caioicy",
         },
         {
           character: "fox",
-          skin: "1",
+          skin: "Default",
           player: "caioicy",
         },
         {
           character: "falco",
-          skin: "1",
+          skin: "Default",
           player: "caioicy",
         },
         {
           character: "marth",
-          skin: "1",
+          skin: "Default",
           player: "caioicy",
         },
         {
           character: "sheik",
-          skin: "1",
+          skin: "Default",
           player: "caioicy",
         },
       ],
@@ -83,7 +91,7 @@ class App extends React.Component {
   }
 
   renderSlot(slot, placementIndex) {
-    const img = `${slot.character}_${slot.skin}.png`;
+    const img = `${assetBank.melee.characters[slot.character].colors[slot.skin]}`;
     return (
       <div key={`slot-${placementIndex}`} style={{backgroundImage: `url(${images[img]})`}} className="character-slot">
         <p className="slot-text-top">#{placementIndex+1} {slot.player}</p>
@@ -110,12 +118,46 @@ class App extends React.Component {
           </div>
         </div>
 
-        <button onClick={this.downloadExport}>
-          Download
-        </button>
+        <div>
+          <button onClick={this.downloadExport}>
+            Download
+          </button>
+        </div>
+
+        <div>
+          {this.state.slots.map((slot, idx) =>
+            <FormControl>
+              <InputLabel id="demo-simple-select-label">#{idx+1}</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={this.state.slots[idx].character}
+                onChange={(ev) => this.handleCharChange(ev, idx)}
+              >
+                {this.renderDropdownOptions()}
+              </Select>
+            </FormControl>
+          )}
+        </div>
       </div>
     );
   }
+
+  renderDropdownOptions() {
+    const charKeys = Object.keys(assetBank.melee.characters);
+    const res = charKeys.map((ch, idx) =>
+      <MenuItem key={idx} value={ch}>{assetBank.melee.characters[ch].name}</MenuItem>
+    );
+    return res;
+  }
+
+  handleCharChange = (event, slotIdx) => {
+    const ch = event.target.value;
+    const { slots } = this.state;
+    slots[slotIdx].character = ch;
+    slots[slotIdx].skin = 'Default';
+    this.setState({slots});
+  };
 
   downloadExport() {
     htmlToImage.toPng(document.getElementById('export'))
