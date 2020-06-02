@@ -6,6 +6,7 @@ import Select from '@material-ui/core/Select';
 import FormControl from '@material-ui/core/FormControl';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
+import Input from '@material-ui/core/Input';
 import assetBank from './Assets.jsx';
 
 function importAll(r) {
@@ -24,49 +25,48 @@ class App extends React.Component {
     super(props);
     this.state = {
       tournament: {
-        name: "Netplay Coronga #4",
-        date: "2020-May-24",
+        name: "Copa Sir Michael #1 - 30/May/2020",
       },
       slots: [
         {
           character: "fox",
           skin: "Default",
-          player: "caioicy",
-        },
-        {
-          character: "falco",
-          skin: "Default",
-          player: "caioicy",
+          player: "CaioIcy",
         },
         {
           character: "marth",
           skin: "Default",
-          player: "caioicy",
+          player: "kodo",
         },
         {
-          character: "sheik",
+          character: "peach",
           skin: "Default",
-          player: "caioicy",
-        },
-        {
-          character: "fox",
-          skin: "Default",
-          player: "caioicy",
+          player: "ludecoli",
         },
         {
           character: "falco",
           skin: "Default",
-          player: "caioicy",
+          player: "Vlory",
+        },
+        {
+          character: "pikachu",
+          skin: "Default",
+          player: "Drutar",
+        },
+        {
+          character: "ics",
+          skin: "Default",
+          player: "Drunk",
+        },
+        {
+          character: "peach",
+          skin: "Default",
+          player: "Zim",
         },
         {
           character: "marth",
           skin: "Default",
-          player: "caioicy",
-        },
-        {
-          character: "sheik",
-          skin: "Default",
-          player: "caioicy",
+          player: "pastheo",
         },
       ],
     };
@@ -95,7 +95,6 @@ class App extends React.Component {
     return (
       <div key={`slot-${placementIndex}`} style={{backgroundImage: `url(${images[img]})`}} className="character-slot">
         <p className="slot-text-top">#{placementIndex+1} {slot.player}</p>
-        <p className="slot-text-bot">{slot.character}</p>
       </div>
     );
   }
@@ -103,7 +102,7 @@ class App extends React.Component {
   renderTournament() {
     return (
       <div>
-      {this.state.tournament.name} {this.state.tournament.date}
+      {this.state.tournament.name}
       </div>
     );
   }
@@ -139,6 +138,38 @@ class App extends React.Component {
             </FormControl>
           )}
         </div>
+
+        <div>
+          {this.state.slots.map((slot, idx) =>
+            <FormControl>
+              <InputLabel id="demo-simple-select-label">#{idx+1}</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={this.state.slots[idx].skin}
+                onChange={(ev) => this.handleSkinChange(ev, idx)}
+              >
+                {this.renderDropdownOptionsColors(this.state.slots[idx].character)}
+              </Select>
+            </FormControl>
+          )}
+        </div>
+
+        <div>
+          {this.state.slots.map((slot, idx) =>
+            <FormControl>
+              <Input
+                defaultValue={this.state.slots[idx].player}
+                onChange={(ev) => this.handlePlayerChange(ev, idx)}
+              />
+            </FormControl>
+          )}
+        </div>
+
+        <Input
+          defaultValue={this.state.tournament.name}
+          onChange={(ev) => this.handleTournamentChange(ev)}
+        />
       </div>
     );
   }
@@ -151,11 +182,39 @@ class App extends React.Component {
     return res;
   }
 
+  renderDropdownOptionsColors(ch) {
+    const colorKeys = Object.keys(assetBank.melee.characters[ch].colors);
+    const res = colorKeys.map((color, idx) =>
+      <MenuItem key={idx} value={color}>{colorKeys[idx]}</MenuItem>
+    );
+    return res;
+  }
+
+  handleTournamentChange(ev) {
+    const { tournament } = this.state;
+    tournament.name = ev.target.value;
+    this.setState({tournament});
+  }
+
+  handlePlayerChange = (event, slotIdx) => {
+    const ch = event.target.value;
+    const { slots } = this.state;
+    slots[slotIdx].player = ch;
+    this.setState({slots});
+  }
+
   handleCharChange = (event, slotIdx) => {
     const ch = event.target.value;
     const { slots } = this.state;
     slots[slotIdx].character = ch;
     slots[slotIdx].skin = 'Default';
+    this.setState({slots});
+  };
+
+  handleSkinChange = (event, slotIdx) => {
+    const ch = event.target.value;
+    const { slots } = this.state;
+    slots[slotIdx].skin = ch;
     this.setState({slots});
   };
 
